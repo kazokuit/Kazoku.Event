@@ -1,0 +1,95 @@
+﻿@page "/"
+
+<PageTitle>Kazoku event - Start</PageTitle>
+
+<h1>Välkommen till Kazoku event!</h1>
+<p>Nedan hittar du alla event på Kazoku. </p>
+
+@if (showModal)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">@currentEvent.Name</h4>
+                    @* <button type="button" class="close" @onclick="@ModalCancel">&times;</button> *@
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                   
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn" @onclick="@ModalCancel">Avbryt</button>
+                    <button type="button" class="btn btn-danger" @onclick=@ModalOk>Spara</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+<div class="accordion" id="accordionExample">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Kazoku Karlstad - Studentkväll 9/02
+                </button>
+            </h2>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+                Förra studentkvällen gick bra, vi fick fin respons men vi har även lite nya idéer att föra fram, och även en NY LOKAL som vi inte har visat upp än! 😃
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (events.Count > 0)
+{
+    @foreach (Event currentEvent in events)
+    {
+        <p>@currentEvent.Name</p>
+    }           
+}
+else 
+{
+    <hr />
+    <p>Inga event tillgängliga just nu.</p>
+}
+
+<hr />
+<h3>Sugen på mer?</h3>
+<p>Hör av dig till oss.</p>
+
+@code 
+{
+    List<Event> events = new List<Event>();
+    Event? currentEvent = null;
+    bool showModal = false;
+
+    void ModalShow(Event inputEvent)
+    {
+        currentEvent = inputEvent;
+        showModal = true;
+    }
+
+    void ModalCancel() => showModal = false;
+    async void ModalOk()
+    {
+        showModal = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //events = await StorageService.GetEventsAsync();
+        //events = events.OrderBy(e => e.Date).ToList();
+    }
+}

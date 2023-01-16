@@ -1,0 +1,16 @@
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <h1>Du hittade en sida som egentligen inte finns, kul!</h1>
+            <p>Intresserad av att veta mer om <a href="https://www.kazoku.se/">Kazoku</a>?</p>
+            <a href="https://www.kazoku.se/">
+                <img src="https://httpstatusdogs.com/img/404.jpg" />
+            </a>
+        </LayoutView>
+    </NotFound>
+</Router>

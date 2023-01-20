@@ -1,0 +1,17 @@
+﻿@page "/login"
+
+<PageTitle>Kazoku event - Logga in</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Välkommen @context.User.Identity?.Name!</h1>
+        <p>
+            För att hantera event, <a href="/">gå hit</a>.
+        </p>
+        <a class="btn btn-primary" href="MicrosoftIdentity/Account/SignOut">Logga ut</a>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Logga in</h1>
+        <a class="btn btn-primary" href="MicrosoftIdentity/Account/SignIn">Logga in</a>
+    </NotAuthorized>
+</AuthorizeView>

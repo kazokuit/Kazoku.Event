@@ -4,6 +4,7 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using Website.Models.Configs;
 using System.Diagnostics;
 using Website.Models;
+using Microsoft.Extensions.Options;
 
 namespace Website.Services
 {
@@ -12,10 +13,10 @@ namespace Website.Services
         private readonly CloudTableClient _client;
         private readonly AzureOptions _azure;
 
-        public StorageService(AzureOptions azure)
+        public StorageService(IOptions<AzureOptions> azure)
         {
             _client = CreateCloudTableClient();
-            _azure = azure;
+            _azure = azure.Value;
         }
  
         private CloudTableClient CreateCloudTableClient()

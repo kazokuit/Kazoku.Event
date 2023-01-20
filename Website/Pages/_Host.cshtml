@@ -1,5 +1,7 @@
 ﻿@page "/"
 @namespace Website.Pages
+@using Microsoft.AspNetCore.Authorization
+@attribute [AllowAnonymous]
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     Layout = "_Layout";

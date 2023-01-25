@@ -8,6 +8,9 @@ namespace Website.Models
         public string EventId { get { return PartitionKey; } }
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public FoodPreference FoodPreference { get; set; } = FoodPreference.Everything;
+        public bool Study { get; set; } = true;
+        public string? Occupation { get; set; }
         public string? Info { get; set; }
     }
 }

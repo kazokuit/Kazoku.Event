@@ -21,19 +21,7 @@ jobs:
         with:
           dotnet-version: '6.0.x'
           include-prerelease: true
-          
-      - name: App Settings Variable Substitution  
-        uses: microsoft/variable-substitution@v1  
-        with:
-          files: '*/*appsettings.json'
-        env:
-          AzureAd.Domain: ${{ secrets.AZUEAD_DOMAIN }}
-          AzureAd.TenantId: ${{ secrets.AZUREAD_TENANTID }}
-          AzureAd.ClientId: ${{ secrets.AZUREAD_CLIENTID }}
-          Azure.AccountName: ${{ secrets.AZURE_ACCOUNTNAME }}
-          Azure.AccountKey: ${{ secrets.AZURE_ACCOUNTKEY }}
-          Azure.ConnectionString: ${{ secrets.AZURE_CONNECTIONSTRING }}
-          
+
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
@@ -65,5 +53,5 @@ jobs:
         with:
           app-name: 'kazokuevent'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_51FE728459674EAFBC0E9391C2E34CE2 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4A7D090DA4B44A6E8D517E62099A809C }}
           package: .

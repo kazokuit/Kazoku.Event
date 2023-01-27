@@ -30,7 +30,7 @@
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <!-- <EventForm /> -->
+                    <Website.Components.Events.Form currentEvent="@currentEvent"  />
                 </div>
 
                 <!-- Modal footer -->
@@ -83,7 +83,7 @@ else
 @code 
 {
     List<Event> events = new List<Event>();
-    Event? currentEvent = null;
+    Event? currentEvent = new Event();
     bool showModal = false;
 
     void ModalShow(Event? inputEvent)

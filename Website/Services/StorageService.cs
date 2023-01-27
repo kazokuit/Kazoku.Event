@@ -11,26 +11,29 @@ namespace Website.Services
     public class StorageService
     {
         private readonly CloudTableClient _client;
-        private readonly AzureOptions _azure;
+        private readonly IOptions<AzureOptions> _azure;
 
         public StorageService(IOptions<AzureOptions> azure)
         {
+            _azure = azure;
             _client = CreateCloudTableClient();
-            _azure = azure.Value;
+            
         }
  
         private CloudTableClient CreateCloudTableClient()
         {
             // Get Storage Information
-            var accountName = _azure.AccountName;
-            var accountKey = _azure.AccountKey;
+            var accountName = _azure.Value.AccountName;
+            var accountKey = _azure.Value.AccountKey;
+            var connectionString = _azure.Value.ConnectionString;
 
             // Set Auth
-            var creds = new StorageCredentials(accountName, accountKey);
-            var account = new CloudStorageAccount(creds, useHttps: true);
+            //var creds = new StorageCredentials(accountName, accountKey);
+            //var account = new CloudStorageAccount(creds, useHttps: true);
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
 
             // Connect to Storage
-            return account.CreateCloudTableClient();
+            return storageAccount.CreateCloudTableClient();
         }
 
         private async Task<CloudTable> GetTableAsync(string tableName)
@@ -58,6 +61,16 @@ namespace Website.Services
             } while (continuationToken != null);
 
             return events;
+        }
+
+        public async Task InsertEventAsync(Event currentEvent)
+        {
+            //TableOperation insertOperation = TableOperation.InsertOrReplace(currentEvent);
+            //TableResult result = await table.ExecuteAsync(insertOperation);
+
+            CloudTable table = await GetTableAsync("eventkazokutable");
+            var op = TableOperation.Insert(currentEvent);
+            await table.ExecuteAsync(op);
         }
     }
 }

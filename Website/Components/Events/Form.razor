@@ -1,0 +1,38 @@
+﻿@using Website.Models.Configs;
+@inject StorageService storage
+
+
+<EditForm Model="@currentEvent" OnSubmit="@HandleSubmit">
+    <InputText id="name" @bind-Value="currentEvent.Name" />
+    <InputText id="description" @bind-Value="currentEvent.Description" />
+    <InputText id="location" @bind-Value="currentEvent.Location" />
+    <InputDate id="date" @bind-Value="currentEvent.Date" />
+    <InputDate id="deadline" @bind-Value="currentEvent.Deadline" />
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Event currentEvent { get; set; }
+
+    private CloudTable table = new CloudTable(new Uri("https://eventskazoku.table.core.windows.net/eventkazokutable"));
+
+
+    private async void HandleSubmit()
+    {
+        var theEvent = new Event
+            {
+                Name = currentEvent.Name,
+                Description = currentEvent.Description,
+                Location = currentEvent.Location,
+                Date = currentEvent.Date,
+                Deadline = currentEvent.Deadline,
+                MaxParticipants = 4
+            };
+
+        await storage.InsertEventAsync(theEvent);
+        Console.WriteLine("lksjdflksaf");
+        // Process the form
+    }
+}

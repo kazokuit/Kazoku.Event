@@ -10,7 +10,7 @@ namespace Website.Models
         }
 
         public string Id { get { return PartitionKey; } }
-        public string Name { get { return RowKey; } }
+        public string Name { get => RowKey; set => RowKey = value; }
         public string Description { get; set; } = string.Empty; 
         public string Location { get; set; } = string.Empty;
         public DateTime Date { get; set; }

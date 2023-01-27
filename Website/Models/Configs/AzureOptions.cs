@@ -2,9 +2,9 @@
 {
     public class AzureOptions
     {
-        public const string Key = "Azure";
-        public string AccountName { get; set; } = string.Empty;
-        public string AccountKey { get; set; } = string.Empty;
-        public string ConnectionString { get; set; } = string.Empty;
+        public const string Key = "AzureOptions";
+        public string AccountName { get; set; }
+        public string AccountKey { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

@@ -1,0 +1,29 @@
+﻿<EditForm Model="@participant" OnSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label class="form-label" for="name">Namn</label>
+        <InputText class="form-control" id="name" @bind-Value=participant.Name />
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="address">Adress</label>
+        <InputText class="form-control" id="address" @bind-Value=participant.Email />
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="address">Adress</label>
+        <InputText class="form-control" id="address" @bind-Value=participant.Email />
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Participant participant { get; set; }
+
+    private void HandleSubmit()
+    {
+
+    }
+}

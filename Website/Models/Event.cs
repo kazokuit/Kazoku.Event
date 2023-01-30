@@ -13,8 +13,8 @@ namespace Website.Models
         public string Name { get => RowKey; set => RowKey = value; }
         public string Description { get; set; } = string.Empty; 
         public string Location { get; set; } = string.Empty;
-        public DateTime Date { get; set; }
-        public DateTime Deadline { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Deadline { get; set; } = DateTime.Now.AddDays(1);
         public int MaxParticipants { get; set; }
         public bool Interrnal { get; set; } = false;
     }

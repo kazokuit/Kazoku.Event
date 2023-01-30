@@ -18,12 +18,16 @@
 
     private CloudTable table = new CloudTable(new Uri("https://eventskazoku.table.core.windows.net/eventkazokutable"));
 
+    
 
     private async void HandleSubmit()
     {
-        var theEvent = new Event
+        Guid guid = Guid.NewGuid();
+        try
+        {
+            var theEvent = new Event
             {
-                Id = new Guid().ToString(),
+                Id = guid.ToString(),
                 Name = currentEvent.Name,
                 Description = currentEvent.Description,
                 Location = currentEvent.Location,
@@ -32,7 +36,12 @@
                 MaxParticipants = 4
             };
 
-        await storage.InsertEventAsync(theEvent);
+            await storage.InsertEventAsync(theEvent);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
         Console.WriteLine("lksjdflksaf");
         // Process the form
     }

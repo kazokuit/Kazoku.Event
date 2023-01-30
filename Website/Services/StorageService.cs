@@ -47,7 +47,7 @@ namespace Website.Services
         {
             List<Event> events = new List<Event>();
 
-            CloudTable eventsTable = await GetTableAsync("Events");
+            CloudTable eventsTable = await GetTableAsync("eventkazokutable");
             var eventsQuery = new TableQuery<Event>();
 
             TableContinuationToken? continuationToken = null;

@@ -1,6 +1,5 @@
 ﻿@page "/"
 @inject StorageService service
-@inject NavigationManager uriHelper;
 
 <PageTitle>Kazoku event - Start</PageTitle>
 
@@ -116,6 +115,7 @@
     {
         await service.DeleteEventAsync(theEvent);
         events.Remove(theEvent);
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()

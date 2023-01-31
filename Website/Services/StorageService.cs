@@ -72,5 +72,12 @@ namespace Website.Services
             var op = TableOperation.Insert(currentEvent);
             await table.ExecuteAsync(op);
         }
+
+        public async Task DeleteEventAsync(Event currentEvent)
+        {
+            CloudTable table = await GetTableAsync("eventkazokutable");
+            var op = TableOperation.Delete(currentEvent);
+            await table.ExecuteAsync(op);
+        }
     }
 }

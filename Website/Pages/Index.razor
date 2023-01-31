@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject StorageService service
+@inject NavigationManager uriHelper;
 
 <PageTitle>Kazoku event - Start</PageTitle>
 
@@ -67,6 +68,9 @@
                                 @theEvent.Description
                             </div>
                         </div>
+                        <div>
+                            <button type="button" class="btn btn-danger" @onclick="() => DeleteEvent(theEvent)">Ta bort</button>
+                        </div>
                     </div>
                 </div>
             }
@@ -106,6 +110,12 @@
     async void ModalOk()
     {
         showModal = false;
+    }
+
+    public async void DeleteEvent(Event theEvent)
+    {
+        await service.DeleteEventAsync(theEvent);
+        events.Remove(theEvent);
     }
 
     protected override async Task OnInitializedAsync()

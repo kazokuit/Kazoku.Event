@@ -51,28 +51,9 @@
     @if (events.Count > 0)
     {
         <ul>
-            @foreach (var theEvent in events)
+            @foreach (var loopEvent in events)
             {
-                <div class="accordion" id="accordionExample">
-                    <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    @theEvent.Name @theEvent.Date
-                                </button>
-                            </h2>
-                        </div>
-
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                            <div class="card-body">
-                                @theEvent.Description
-                            </div>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-danger" @onclick="() => DeleteEvent(theEvent)">Ta bort</button>
-                        </div>
-                    </div>
-                </div>
+            <Website.Components.Events.Accordion CurrentEvent="@loopEvent" onDeleteEvent="@DeleteEvent" />
             }
         </ul>
     }
@@ -112,10 +93,12 @@
         showModal = false;
     }
 
-    public async void DeleteEvent(Event theEvent)
+    private async Task DeleteEvent(Event currEvent)
     {
-        await service.DeleteEventAsync(theEvent);
-        events.Remove(theEvent);
+        await service.DeleteEventAsync(currEvent);
+        events.Remove(currEvent);
+
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()

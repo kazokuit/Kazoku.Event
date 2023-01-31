@@ -52,23 +52,7 @@
         <ul>
             @foreach (var theEvent in events)
             {
-                <div class="accordion" id="accordionExample">
-                    <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    @theEvent.Name @theEvent.Date
-                                </button>
-                            </h2>
-                        </div>
-
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                            <div class="card-body">
-                                @theEvent.Description
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Website.Components.Events.Accordion CurrentEvent="@theEvent" />
             }
         </ul>
     }

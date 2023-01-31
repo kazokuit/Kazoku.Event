@@ -1,7 +1,6 @@
 ﻿@inject StorageService storage
 @inject NavigationManager uriHelper;
 
-
 <EditForm Model="@currentEvent" OnSubmit="@HandleSubmit">
     <InputText id="name" @bind-Value="currentEvent.Name" />
     <InputText id="description" @bind-Value="currentEvent.Description" />

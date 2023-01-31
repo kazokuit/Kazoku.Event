@@ -16,10 +16,6 @@
     [Parameter]
     public Event currentEvent { get; set; }
 
-    private CloudTable table = new CloudTable(new Uri("https://eventskazoku.table.core.windows.net/eventkazokutable"));
-
-
-
     private async void HandleSubmit()
     {
         Guid guid = Guid.NewGuid();

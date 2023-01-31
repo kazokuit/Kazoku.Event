@@ -1,8 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
 using Website.Models.Configs;
-using System.Diagnostics;
 using Website.Models;
 using Microsoft.Extensions.Options;
 
@@ -17,7 +15,6 @@ namespace Website.Services
         {
             _azure = azure;
             _client = CreateCloudTableClient();
-            
         }
  
         private CloudTableClient CreateCloudTableClient()
@@ -27,9 +24,7 @@ namespace Website.Services
             var accountKey = _azure.Value.AccountKey;
             var connectionString = _azure.Value.ConnectionString;
 
-            // Set Auth
-            //var creds = new StorageCredentials(accountName, accountKey);
-            //var account = new CloudStorageAccount(creds, useHttps: true);
+            // Parsing connection string 
             var storageAccount = CloudStorageAccount.Parse(connectionString);
 
             // Connect to Storage
@@ -47,7 +42,7 @@ namespace Website.Services
         {
             List<Event> events = new List<Event>();
 
-            CloudTable eventsTable = await GetTableAsync("eventkazokutable");
+            CloudTable eventsTable = await GetTableAsync("Events");
             var eventsQuery = new TableQuery<Event>();
 
             TableContinuationToken? continuationToken = null;
@@ -65,10 +60,7 @@ namespace Website.Services
 
         public async Task InsertEventAsync(Event currentEvent)
         {
-            //TableOperation insertOperation = TableOperation.InsertOrReplace(currentEvent);
-            //TableResult result = await table.ExecuteAsync(insertOperation);
-
-            CloudTable table = await GetTableAsync("eventkazokutable");
+            CloudTable table = await GetTableAsync("Events");
             var op = TableOperation.Insert(currentEvent);
             await table.ExecuteAsync(op);
         }

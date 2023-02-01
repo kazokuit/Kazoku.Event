@@ -42,7 +42,7 @@
                 </button>
                 <button type="submit" form="@EventForm" class="btn btn-primary">
                     Spara
-                    </button>
+                </button>
             </div>
         </div>
     </div>
@@ -56,9 +56,17 @@
     public EventCallback onHideModal { get; set; }
 
     private string EventForm = "EventForm";
+    private EditContext editContext;
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(currentEvent);
+    }
+
 
     private async void SubmitForm()
     {
+        
         Guid guid = Guid.NewGuid();
         try
         {

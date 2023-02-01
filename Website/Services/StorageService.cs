@@ -63,6 +63,7 @@ namespace Website.Services
             CloudTable table = await GetTableAsync("Events");
             var op = TableOperation.Insert(currentEvent);
             await table.ExecuteAsync(op);
+            
         }
 
         public async Task DeleteEventAsync(Event currentEvent)

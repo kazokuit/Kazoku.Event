@@ -20,50 +20,24 @@
 
 @if (showModal)
 {
-    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">@(currentEvent is not null ? currentEvent.Name : "Skapa event")</h4>
-                    @* <button type="button" class="close" @onclick="@ModalCancel">&times;</button> *@
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <Website.Components.Events.Form currentEvent="@currentEvent"  />
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn" @onclick="@ModalCancel">Avbryt</button>
-                    <button type="button" class="btn btn-danger" @onclick=@ModalOk>Spara</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
+    <Website.Components.Events.Modal CurrentEvent="@currentEvent" onHideModal="ModalCancel" />
     <div class="modal-backdrop fade show"></div>
 }
 
-
-    @if (events.Count > 0)
-    {
-        <ul>
-            @foreach (var loopEvent in events)
-            {
+@if (events.Count > 0)
+{
+    <div class="accordion" id="eventList">
+        @foreach (var loopEvent in events)
+        {
             <Website.Components.Events.Accordion CurrentEvent="@loopEvent" onDeleteEvent="@DeleteEvent" />
-            }
-        </ul>
-    }
-    else
-    {
-        <hr />
-        <p>Inga event tillgängliga just nu.</p>
-    }
-
-
+        }
+    </div>
+}
+else
+{
+    <hr />
+    <p>Inga event tillgängliga just nu.</p>
+}
 
 <hr />
 <h3>Sugen på mer?</h3>
@@ -74,20 +48,30 @@
 @code 
 {
     List<Event> events = new List<Event>();
-    Event? currentEvent = new Event();
+    Event? currentEvent = null;
     bool showModal = false;
 
-    void ModalShow(Event? inputEvent)
+    protected override async Task OnInitializedAsync()
+    {
+        events = await service.GetEventsAsync();
+        events = events.OrderBy(e => e.Date).ToList();
+    }
+
+    private void ModalShow(Event? inputEvent)
     {
         if (inputEvent is not null)
         {
             currentEvent = inputEvent;
         }
+        else 
+        {
+            currentEvent = new Event();
+        }
 
         showModal = true;
     }
 
-    void ModalCancel() => showModal = false;
+    private void ModalCancel() => showModal = false;
     async void ModalOk()
     {
         showModal = false;
@@ -99,11 +83,5 @@
         events.Remove(currEvent);
 
         StateHasChanged();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        events = await service.GetEventsAsync();
-        events = events.OrderBy(e => e.Date).ToList();
     }
 }

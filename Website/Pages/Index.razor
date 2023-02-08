@@ -20,7 +20,7 @@
 
 @if (showModal)
 {
-    <Website.Components.Events.Modal CurrentEvent="@currentEvent" onHideModal="ModalCancel" />
+    <Website.Components.Events.Modal CurrentEvent="@currentEvent" onHideModal="ModalCancel" onAddedEvent="AddedEvent" />
     <div class="modal-backdrop fade show"></div>
 }
 
@@ -54,7 +54,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         events = await service.GetEventsAsync();
-        events = events.OrderBy(e => e.Date).ToList();
+        events = SortEvents(events);
     }
 
     private void ModalShow(Event? inputEvent)
@@ -72,9 +72,13 @@ else
     }
 
     private void ModalCancel() => showModal = false;
-    async void ModalOk()
+
+    protected async Task AddedEvent (Event newEvent)
     {
-        showModal = false;
+        ModalCancel();
+        events.Add(newEvent);
+        events = SortEvents(events);
+        StateHasChanged();
     }
 
     private async Task DeleteEvent(Event currEvent)
@@ -83,5 +87,10 @@ else
         events.Remove(currEvent);
 
         StateHasChanged();
+    }
+
+    private List<Event> SortEvents(List<Event> inEvents)
+    {
+        return inEvents.OrderBy(e => e.Date).ToList();
     }
 }

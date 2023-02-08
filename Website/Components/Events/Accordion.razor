@@ -5,11 +5,7 @@
                 @currentEvent.Name - @currentEvent.Date
             </button>
         </h2>
-        <AuthorizeView>
-            <Authorized>
-                <button type="button" class="btn btn-outline-danger float-end" @onclick="DeleteEvent">Ta bort</button>
-            </Authorized>
-        </AuthorizeView>
+
     </div>
 
     <div id="collapseOne" class="collapse @(showEvent ? "show" : "")" aria-labelledby="headingOne" data-parent="#eventList">
@@ -21,7 +17,14 @@
                 Tid: @currentEvent.Date
                 <br />
                 Plats: @currentEvent.Location
+                <br />
+                Max deltagare: @currentEvent.MaxParticipants
             </p>
+            <AuthorizeView>
+                <Authorized>
+                    <button type="button" class="btn btn-outline-danger float-end mb-3" @onclick="DeleteEvent">Ta bort</button>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
 </div>

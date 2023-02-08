@@ -10,40 +10,47 @@
                 <h4 class="modal-title">@(string.IsNullOrEmpty(currentEvent.Name) ? "Skapa event" : $"Redigera {currentEvent.Name}")</h4>
             </div>
 
-            <!-- Modal body -->
-            <div class="modal-body">
-                <EditForm id="@EventForm" Model="@currentEvent" OnSubmit="@SubmitForm">
+            <EditForm Model="@currentEvent" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <!-- Modal body -->
+                <div class="modal-body">
                     <div class="form-group">
-                        <label>Namn:</label>
+                        <label for="name">Namn:</label>
                         <InputText class="form-control" id="name" @bind-Value="currentEvent.Name" />
                     </div>
                     <div class="form-group">
-                        <label>Beskrivning:</label>
+                        <label fordescription>Beskrivning:</label>
                         <InputTextArea class="form-control" id="description" @bind-Value="currentEvent.Description" />
                     </div>
                     <div class="form-group">
-                        <label>Plats:</label>
+                        <label for="location">Plats:</label>
                         <InputText class="form-control" id="location" @bind-Value="currentEvent.Location" />
                     </div>
                     <div class="form-group">
-                        <label>Datum:</label>
+                        <label for="date">Datum:</label>
                         <InputDate class="form-control" id="date" @bind-Value="currentEvent.Date" />
                     </div>
                     <div class="form-group">
-                        <label>Deadline:</label>
+                        <label for="deadline">Deadline:</label>
                         <InputDate class="form-control" id="deadline" @bind-Value="currentEvent.Deadline" />
                     </div>
-                </EditForm>
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button class="btn btn-outline-secondary" @onclick="HideModal">
-                    Avbryt
-                </button>
-                <button type="submit" form="@EventForm" class="btn btn-primary">
-                    Spara
-                </button>
-            </div>
+                    <div class="form-group">
+                        <label for="max">Deadline:</label>
+                        <InputNumber class="form-control" id="max" @bind-Value="currentEvent.MaxParticipants" />
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" @onclick="HideModal">
+                        Avbryt
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Spara
+                    </button>
+                </div>
+            </EditForm>
+
         </div>
     </div>
 </div>
@@ -55,47 +62,31 @@
     [Parameter]
     public EventCallback onHideModal { get; set; }
 
-    private string EventForm = "EventForm";
-    private EditContext editContext;
+    [Parameter]
+    public EventCallback<Event> onAddedEvent { get; set; }
 
-    protected override void OnInitialized()
+    private async Task HandleSubmit()
     {
-        editContext = new EditContext(currentEvent);
-    }
-
-
-    private async void SubmitForm()
-    {
-        
         Guid guid = Guid.NewGuid();
         try
         {
-            var theEvent = new Event
-                {
-                    Id = guid.ToString(),
-                    Name = currentEvent.Name,
-                    Description = currentEvent.Description,
-                    Location = currentEvent.Location,
-                    Date = currentEvent.Date,
-                    Deadline = currentEvent.Deadline,
-                    MaxParticipants = 4
-                };
-
-            await storage.InsertEventAsync(theEvent);
-            HideModal();
+            currentEvent.Id = guid.ToString();
+            await storage.InsertEventAsync(currentEvent);
+            AddedEvent(currentEvent);
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
         }
     }
-    
-    private async void Save()
-    {
-    }
 
     protected async Task HideModal()
     {
         await onHideModal.InvokeAsync();
+    }
+
+    protected async Task AddedEvent(Event currentEvent)
+    {
+        await onAddedEvent.InvokeAsync(currentEvent);
     }
 }

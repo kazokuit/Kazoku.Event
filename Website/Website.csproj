@@ -17,9 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Participants\" />
     <Folder Include="Helpers\" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://blockprotocol.org/schemas/block-metadata.json" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

@@ -1,0 +1,92 @@
+﻿@inject StorageService storage
+@inject NavigationManager uriHelper;
+
+<div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">@(string.IsNullOrEmpty(currentEvent.Name) ? "Skapa event" : $"Redigera {currentEvent.Name}")</h4>
+            </div>
+
+            <EditForm Model="@currentEvent" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Namn:</label>
+                        <InputText class="form-control" id="name" @bind-Value="currentEvent.Name" />
+                    </div>
+                    <div class="form-group">
+                        <label fordescription>Beskrivning:</label>
+                        <InputTextArea class="form-control" id="description" @bind-Value="currentEvent.Description" />
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Plats:</label>
+                        <InputText class="form-control" id="location" @bind-Value="currentEvent.Location" />
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Datum:</label>
+                        <InputDate class="form-control" id="date" @bind-Value="currentEvent.Date" />
+                    </div>
+                    <div class="form-group">
+                        <label for="deadline">Deadline:</label>
+                        <InputDate class="form-control" id="deadline" @bind-Value="currentEvent.Deadline" />
+                    </div>
+                    <div class="form-group">
+                        <label for="max">Deadline:</label>
+                        <InputNumber class="form-control" id="max" @bind-Value="currentEvent.MaxParticipants" />
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" @onclick="HideModal">
+                        Avbryt
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Spara
+                    </button>
+                </div>
+            </EditForm>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Event currentEvent { get; set; }
+
+    [Parameter]
+    public EventCallback onHideModal { get; set; }
+
+    [Parameter]
+    public EventCallback<Event> onAddedEvent { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        Guid guid = Guid.NewGuid();
+        try
+        {
+            currentEvent.Id = guid.ToString();
+            await storage.InsertEventAsync(currentEvent);
+            AddedEvent(currentEvent);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    protected async Task HideModal()
+    {
+        await onHideModal.InvokeAsync();
+    }
+
+    protected async Task AddedEvent(Event currentEvent)
+    {
+        await onAddedEvent.InvokeAsync(currentEvent);
+    }
+}

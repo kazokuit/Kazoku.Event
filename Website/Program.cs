@@ -17,6 +17,7 @@ string name = "Kazoku.Event";
 // Add Blazor services.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddScoped<StorageService>();
 
 // Configuration.
 builder.Services.Configure<AzureOptions>(builder.Configuration.GetSection(AzureOptions.Key));
@@ -30,7 +31,6 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<StorageService>();
 
 builder.Services.AddAuthorization(options =>
 {

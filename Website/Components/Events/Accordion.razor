@@ -1,0 +1,52 @@
+﻿<div class="card">
+    <div class="card-header d-flex justify-content-between" id="headingOne">
+        <h2 class="mb-0" >
+            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" @onclick="(() => ShowEvent(!showEvent))">
+                @currentEvent.Name - @currentEvent.Date
+            </button>
+        </h2>
+
+    </div>
+
+    <div id="collapseOne" class="collapse @(showEvent ? "show" : "")" aria-labelledby="headingOne" data-parent="#eventList">
+        <div class="card-body">
+            <p>
+                @currentEvent.Description
+            </p>
+            <p>
+                Tid: @currentEvent.Date
+                <br />
+                Plats: @currentEvent.Location
+                <br />
+                Max deltagare: @currentEvent.MaxParticipants
+            </p>
+            <AuthorizeView>
+                <Authorized>
+                    <button type="button" class="btn btn-outline-danger float-end mb-3" @onclick="DeleteEvent">Ta bort</button>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+    </div>
+</div>
+
+
+@code 
+{
+    [Parameter]
+    public Event currentEvent { get; set; }
+
+    [Parameter]
+    public EventCallback<Event> onDeleteEvent { get; set; }
+
+    bool showEvent = false;
+
+    protected async Task DeleteEvent()
+    {
+        await onDeleteEvent.InvokeAsync(currentEvent);
+    }
+
+    private void ShowEvent (bool state)
+    {
+        showEvent = state;
+    }
+}

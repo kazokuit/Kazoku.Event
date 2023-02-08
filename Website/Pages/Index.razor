@@ -1,4 +1,6 @@
 ﻿@page "/"
+@inject StorageService service
+@inject NavigationManager uriHelper;
 
 <PageTitle>Kazoku event - Start</PageTitle>
 
@@ -18,59 +20,20 @@
 
 @if (showModal)
 {
-    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">@(currentEvent is not null ? currentEvent.Name : "Skapa event")</h4>
-                    @* <button type="button" class="close" @onclick="@ModalCancel">&times;</button> *@
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <!-- <EventForm /> -->
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn" @onclick="@ModalCancel">Avbryt</button>
-                    <button type="button" class="btn btn-danger" @onclick=@ModalOk>Spara</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
+    <Website.Components.Events.Modal CurrentEvent="@currentEvent" onHideModal="ModalCancel" onAddedEvent="AddedEvent" />
     <div class="modal-backdrop fade show"></div>
 }
 
-<div class="accordion" id="accordionExample">
-    <div class="card">
-        <div class="card-header" id="headingOne">
-            <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Kazoku Karlstad - Studentkväll 9/02
-                </button>
-            </h2>
-        </div>
-
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-            <div class="card-body">
-                Förra studentkvällen gick bra, vi fick fin respons men vi har även lite nya idéer att föra fram, och även en NY LOKAL som vi inte har visat upp än! 😃
-            </div>
-        </div>
-    </div>
-</div>
-
 @if (events.Count > 0)
 {
-    @foreach (Event currentEvent in events)
-    {
-        <p>@currentEvent.Name</p>
-    }           
+    <div class="accordion" id="eventList">
+        @foreach (var loopEvent in events)
+        {
+            <Website.Components.Events.Accordion CurrentEvent="@loopEvent" onDeleteEvent="@DeleteEvent" />
+        }
+    </div>
 }
-else 
+else
 {
     <hr />
     <p>Inga event tillgängliga just nu.</p>
@@ -80,31 +43,54 @@ else
 <h3>Sugen på mer?</h3>
 <p>Hör av dig till oss.</p>
 
+<p class="text-white">Fikus.</p>
+
 @code 
 {
     List<Event> events = new List<Event>();
     Event? currentEvent = null;
     bool showModal = false;
 
-    void ModalShow(Event? inputEvent)
+    protected override async Task OnInitializedAsync()
+    {
+        events = await service.GetEventsAsync();
+        events = SortEvents(events);
+    }
+
+    private void ModalShow(Event? inputEvent)
     {
         if (inputEvent is not null)
         {
             currentEvent = inputEvent;
         }
+        else 
+        {
+            currentEvent = new Event();
+        }
 
         showModal = true;
     }
 
-    void ModalCancel() => showModal = false;
-    async void ModalOk()
+    private void ModalCancel() => showModal = false;
+
+    protected async Task AddedEvent (Event newEvent)
     {
-        showModal = false;
+        ModalCancel();
+        events.Add(newEvent);
+        events = SortEvents(events);
+        StateHasChanged();
     }
 
-    protected override async Task OnInitializedAsync()
+    private async Task DeleteEvent(Event currEvent)
     {
-        //events = await StorageService.GetEventsAsync();
-        //events = events.OrderBy(e => e.Date).ToList();
+        await service.DeleteEventAsync(currEvent);
+        events.Remove(currEvent);
+
+        StateHasChanged();
+    }
+
+    private List<Event> SortEvents(List<Event> inEvents)
+    {
+        return inEvents.OrderBy(e => e.Date).ToList();
     }
 }

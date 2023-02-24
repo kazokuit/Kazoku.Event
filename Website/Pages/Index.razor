@@ -49,6 +49,7 @@ else
 {
     List<Event> events = new List<Event>();
     Event? currentEvent = null;
+    Participant? currentParticipant;
     bool showModal = false;
 
     protected override async Task OnInitializedAsync()
@@ -86,6 +87,13 @@ else
         await service.DeleteEventAsync(currEvent);
         events.Remove(currEvent);
 
+        StateHasChanged();
+    }
+
+    private async Task RegisterParticipant(Participant p)
+    {
+        await service.InsertParticipantAsync(p);
+        
         StateHasChanged();
     }
 

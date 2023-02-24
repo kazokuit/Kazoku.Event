@@ -19,12 +19,18 @@
                 Plats: @currentEvent.Location
                 <br />
                 Max deltagare: @currentEvent.MaxParticipants
-            </p>
+                </p>
             <AuthorizeView>
                 <Authorized>
                     <button type="button" class="btn btn-outline-danger float-end mb-3" @onclick="DeleteEvent">Ta bort</button>
+                    <a class="btn btn-success" href="/" @onclick="() => ModalShow(null)">Registrera</a>
                 </Authorized>
             </AuthorizeView>
+            @if (showModal)
+            {
+                <ParticipantModal Participant="@participant" onHideModal="ModalCancel" onAddedParticipant="AddedParticipant" />
+                <div class="modal-backdrop fade show"></div>
+            }
         </div>
     </div>
 </div>
@@ -35,18 +41,50 @@
     [Parameter]
     public Event currentEvent { get; set; }
 
+    private Participant participant { get; set; }
+
     [Parameter]
     public EventCallback<Event> onDeleteEvent { get; set; }
+    
+    [Parameter]
+    public EventCallback<Participant> onAddedParticipant { get; set; }
 
     bool showEvent = false;
+
+    bool showModal = false;
 
     protected async Task DeleteEvent()
     {
         await onDeleteEvent.InvokeAsync(currentEvent);
     }
 
+    protected async Task RegisterParticipant()
+    {
+        await onAddedParticipant.InvokeAsync(participant);
+    }
+
     private void ShowEvent (bool state)
     {
         showEvent = state;
+    }
+    
+    private void ModalShow(Participant? p)
+    {
+        if (p is not null)
+        {
+            participant = p;
+        }
+        else 
+        {
+            participant = new Participant();
+        }
+
+        showModal = true;
+    }
+    private void ModalCancel() => showModal = false;
+    
+    protected async Task AddedParticipant(Participant participant)
+    {
+        await onAddedParticipant.InvokeAsync(participant);
     }
 }

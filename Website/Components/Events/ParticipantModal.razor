@@ -1,0 +1,80 @@
+@inject StorageService storage
+@inject NavigationManager uriHelper;
+
+<div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">@(string.IsNullOrEmpty(participant.Name) ? "Skapa event" : $"Redigera {participant.Name}")</h4>
+            </div>
+
+            <EditForm Model="@participant" OnValidSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Namn</label>
+                        <InputText class="form-control" id="name" @bind-Value="participant.Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <InputText class="form-control" id="email" @bind-Value="participant.Email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="info">Information vi behöver veta om</label>
+                        <InputTextArea class="form-control" id="info" @bind-Value="participant.Info" />
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button class="btn btn-outline-secondary" @onclick="HideModal">
+                        Avbryt
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Spara
+                    </button>
+                </div>
+            </EditForm>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Participant participant { get; set; }
+
+    [Parameter]
+    public EventCallback onHideModal { get; set; }
+
+    [Parameter]
+    public EventCallback<Participant> onAddedParticipant { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        Guid guid = Guid.NewGuid();
+        try
+        {
+            participant.Id = guid.ToString();
+            await storage.InsertParticipantAsync(participant);
+            await AddedParticipant(participant);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+
+    protected async Task HideModal()
+    {
+        await onHideModal.InvokeAsync();
+    }
+
+    protected async Task AddedParticipant(Participant participant)
+    {
+        await onAddedParticipant.InvokeAsync(participant);
+    }
+}

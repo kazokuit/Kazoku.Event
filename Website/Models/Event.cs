@@ -15,6 +15,8 @@ namespace Website.Models
         public string Location { get; set; } = string.Empty;
         public DateTime Date { get; set; } = DateTime.Now;
         public DateTime Deadline { get; set; } = DateTime.Now.AddDays(1);
+        
+        public List<Participant> Participants { get; set; }
         public int MaxParticipants { get; set; }
         public bool Interrnal { get; set; } = false;
     }

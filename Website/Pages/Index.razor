@@ -5,15 +5,15 @@
 <PageTitle>Kazoku event - Start</PageTitle>
 
 <AuthorizeView>
+    <NotAuthorized>
+        <h1>Välkommen till Kazoku event!</h1>
+    </NotAuthorized>
     <Authorized>
         <div class="d-flex justify-content-between align-items-center">
             <h1>Välkommen till Kazoku event!</h1>
             <a class="btn btn-success" href="/" @onclick="() => ModalShow(null)">Skapa event</a>
         </div>
     </Authorized>
-    <NotAuthorized>
-        <h1>Välkommen till Kazoku event!</h1>
-    </NotAuthorized>
 </AuthorizeView>
 
 <p>Nedan hittar du alla event på Kazoku.</p>

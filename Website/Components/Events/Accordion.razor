@@ -1,14 +1,14 @@
 ﻿<div class="card">
     <div class="card-header d-flex justify-content-between" id="headingOne">
         <h2 class="mb-0" >
-            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" @onclick="(() => ShowEvent(!showEvent))">
+            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#@currentEvent.Id" aria-expanded="true" aria-controls="collapseOne" @onclick="(() => ShowEvent(!showEvent))">
                 @currentEvent.Name - @currentEvent.Date
             </button>
         </h2>
 
     </div>
 
-    <div id="collapseOne" class="collapse @(showEvent ? "show" : "")" aria-labelledby="headingOne" data-parent="#eventList">
+    <div id="@currentEvent.Id" class="collapse @(showEvent ? "show" : "")" aria-labelledby="headingOne" data-parent="#eventList">
         <div class="card-body">
             <p>
                 @currentEvent.Description
